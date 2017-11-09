@@ -15,7 +15,7 @@ if '--make_pair' in sys.argv:
     obj['price'] = float( obj['price'] )
     X = obj['snapped_at'] 
     y = float( obj['price'] )
-    ys.append(y)
+    ys.append([y])
     Xs.append(X)
   open('tmp/make_pair.pkl', 'wb').write( gzip.compress( pickle.dumps( (ys, Xs) ) ) )
   
