@@ -22,15 +22,23 @@ from keras.optimizers import SGD, Adam
 
 input_tensor = Input( shape=(10, 35) )
 
-x = Dense(1000, activation='relu')(input_tensor)
-x = Dense(1000, activation='relu')(x)
+x = Dense(5000, activation='relu')(input_tensor)
+x = BN()(x)
+x = Dropout(0.3)(x)
+x = Dense(5000, activation='relu')(x)
+x = BN()(x)
+x = Dropout(0.3)(x)
 x = Flatten()(x)
+x = Dense(5000, activation='relu')(x)
 x = Dense(1, activation='linear')(x)
 
 model = Model(inputs=input_tensor, outputs=x)
-model.compile(loss='mse', optimizer='adam')
+model.compile(loss='mae', optimizer='sgd')
 
 ys, Xs = pickle.loads( gzip.decompress( open('tmp/data.pkl', 'rb').read() ) )
+max_ = ys.max()
+#ys = ys / max_
 print(Xs.shape)
 print(ys.shape)
-model.fit(Xs, ys, epochs=1000)
+print(ys)
+model.fit(Xs, ys, batch_size=32, epochs=1000)
