@@ -55,8 +55,12 @@ import sqlite3
 if '--key_vec_sql' in sys.argv:
   conn = sqlite3.connect('mona_coin_scraping/mona_coin.db') 
   cur = conn.cursor()
-  Xs, ys = [], []
+
+  date_price = {}
   for date, price in cur.execute('select * from mona_coin'):
+    date_price[date] = price
+  Xs, ys = [], []
+  for date, price in date_price.items():
     Xs.append( date ) 
     ys.append( float(price) )
   open('tmp/make_pair.pkl', 'wb').write( gzip.compress( pickle.dumps( (ys, Xs) ) ) )

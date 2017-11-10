@@ -48,8 +48,9 @@ if '--train' in sys.argv:
   print(Xs.shape)
   print(ys.shape)
   print(ys)
-  model.fit(Xs, ys, batch_size=32, epochs=1000)
-  model.save_weights('model.h5')
+  for i in range(100):
+    model.fit(Xs, ys, batch_size=128, epochs=10)
+    model.save_weights('models/model_{:09d}.h5'.format(i))
 
 if '--predict' in sys.argv:
   ys, Xs = pickle.loads( gzip.decompress( open('tmp/data.pkl', 'rb').read() ) )
