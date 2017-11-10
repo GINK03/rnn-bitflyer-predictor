@@ -15,6 +15,8 @@ sudo pip3 install plyvel
 
 import dbm
 import plyvel
+import sqlite3
+
 
 #rdb = rocksdb.DB("mona_coin.rocksdb", rocksdb.Options(create_if_missing=True))
 dbm = dbm.open("mona_coin.gdbm", "c")
@@ -25,28 +27,39 @@ import pickle
 import gzip
 import re
 import time as Time
+if '--scan' in sys.argv:
+  for key, val in dbm.items():
+    print(key)
+if '--scrape' in sys.argv:
+  conn = sqlite3.connect('mona_coin.db')
+  cur = conn.cursor()
+  try:
+    cur.execute("create table mona_coin (key varchar(64), val varchar(64))")
+  except sqlite3.OperationalError as e:
+    ...
 
-while True:
-  r = requests.get("http://mona-coin.com/charts_m5_jpy.html")
-  html = r.text
-  for line in html.split('\n'):
-    #print(line)
-    time = re.search(r'new Date\((.*?)\)', line)
-    num = re.search(r'(\d{1,}.\d{1,})\]', line)
-    if time is None or num is None:
-      continue
-    time = time.group(1)
-    num = num.group(1)
-    print(time, num)
-    
-    # time key example. 2017,11-1,10,16,05
-    key = bytes(time, 'utf8')
-    val = pickle.dumps( float(num) )
-    ldb.put( key, val )
+  while True:
+    r = requests.get("http://mona-coin.com/charts_m5_jpy.html")
+    html = r.text
+    for line in html.split('\n'):
+      #print(line)
+      time = re.search(r'new Date\((.*?)\)', line)
+      num = re.search(r'(\d{1,}.\d{1,})\]', line)
+      if time is None or num is None:
+        continue
+      time = time.group(1)
+      num = num.group(1)
+      print(time, num)
+      
+      # time key example. 2017,11-1,10,16,05
+      key = bytes(time, 'utf8')
+      val = pickle.dumps( float(num) )
+      ldb.put( key, val )
 
-    key_str = key.decode('utf8')
-    val_str = str(num)
-    dbm[key_str] = val_str
-
-  print("Now Sleeping to time")
-  Time.sleep(100)
+      key_str = key.decode('utf8')
+      val_str = str(num)
+      dbm[key_str] = val_str
+      
+      cur.execute('insert into mona_coin (key, val) values (?, ?)', (key_str, val_str))
+    print("Now Sleeping to time")
+    Time.sleep(100)
