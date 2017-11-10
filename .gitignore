@@ -1,0 +1,6 @@
+model.h5
+fork/btceUSD.csv.gz
+fork/time_price.json
+tmp/data.pkl
+tmp/key_index.json
+tmp/make_pair.pkl
