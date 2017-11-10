@@ -51,6 +51,27 @@ if '--key_vec_bitcoin' in sys.argv:
   print( 'key lenght', len(key_index) )
   open('tmp/key_index.json', 'w').write( json.dumps([key_index, size], indent=2, ensure_ascii=False) )
 
+import sqlite3
+if '--key_vec_sql' in sys.argv:
+  conn = sqlite3.connect('mona_coin_scraping/mona_coin.db') 
+  cur = conn.cursor()
+  Xs, ys = [], []
+  for date, price in cur.execute('select * from mona_coin'):
+    Xs.append( date ) 
+    ys.append( float(price) )
+  open('tmp/make_pair.pkl', 'wb').write( gzip.compress( pickle.dumps( (ys, Xs) ) ) )
+  key_index = {}
+  size = 0
+  for x in Xs: 
+    size = max([size, len(x)])
+    for index, ch in enumerate(list(x)):
+      key = '%s-%s'%(index, ch)
+      if key_index.get(key) is None:
+        key_index[key] = len(key_index)
+
+  print( 'key lenght', len(key_index) )
+  open('tmp/key_index.json', 'w').write( json.dumps([key_index, size], indent=2, ensure_ascii=False) )
+
 if '--to_vec' in sys.argv:
   key_index, size = json.loads( open('tmp/key_index.json').read() )
 

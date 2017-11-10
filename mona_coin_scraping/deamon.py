@@ -19,8 +19,6 @@ import sqlite3
 
 
 #rdb = rocksdb.DB("mona_coin.rocksdb", rocksdb.Options(create_if_missing=True))
-dbm = dbm.open("mona_coin.gdbm", "c")
-ldb = plyvel.DB("mona_coin.leveldb", create_if_missing=True)
 
 import requests
 import pickle
@@ -28,9 +26,16 @@ import gzip
 import re
 import time as Time
 if '--scan' in sys.argv:
-  for key, val in dbm.items():
-    print(key)
+  conn = sqlite3.connect('mona_coin.db')
+  cur = conn.cursor()
+  print('tsu')
+  for date, price in cur.execute('select * from mona_coin'):
+    print(row)
+
+  
 if '--scrape' in sys.argv:
+  dbm = dbm.open("mona_coin.gdbm", "c")
+  ldb = plyvel.DB("mona_coin.leveldb", create_if_missing=True)
   conn = sqlite3.connect('mona_coin.db')
   cur = conn.cursor()
   try:
@@ -61,5 +66,7 @@ if '--scrape' in sys.argv:
       dbm[key_str] = val_str
       
       cur.execute('insert into mona_coin (key, val) values (?, ?)', (key_str, val_str))
+      conn.commit()
+
     print("Now Sleeping to time")
-    Time.sleep(100)
+    Time.sleep(10)
