@@ -33,6 +33,24 @@ if '--key_vec' in sys.argv:
   print( 'key lenght', len(key_index) )
   open('tmp/key_index.json', 'w').write( json.dumps([key_index, size], indent=2, ensure_ascii=False) )
 
+if '--key_vec_bitcoin' in sys.argv:
+  time_price = json.loads( open('fork/time_price.json').read() )
+  ys, Xs = [], []
+  for time, price in time_price.items():
+    ys.append(price)
+    Xs.append(time)
+  key_index = {}
+  size = 0
+  for x in Xs: 
+    size = max([size, len(x)])
+    for index, ch in enumerate(list(x)):
+      key = '%s-%s'%(index, ch)
+      if key_index.get(key) is None:
+        key_index[key] = len(key_index)
+
+  print( 'key lenght', len(key_index) )
+  open('tmp/key_index.json', 'w').write( json.dumps([key_index, size], indent=2, ensure_ascii=False) )
+
 if '--to_vec' in sys.argv:
   key_index, size = json.loads( open('tmp/key_index.json').read() )
 
@@ -48,4 +66,6 @@ if '--to_vec' in sys.argv:
     Xs_.append( base )
   Xs_ = np.array(Xs_)
   ys_ = np.array(ys_)
+  print('ys s shape', ys_.shape)
+  print('Xs s shape', Xs_.shape)
   open('tmp/data.pkl', 'wb').write( gzip.compress( pickle.dumps( (ys_, Xs_) ) ) )

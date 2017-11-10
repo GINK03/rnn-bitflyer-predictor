@@ -20,7 +20,8 @@ from keras.applications.resnet50 import ResNet50
 from keras.optimizers import SGD, Adam
 from keras import backend as K
 
-input_tensor = Input( shape=(10, 35) )
+#input_tensor = Input( shape=(10, 35) )
+input_tensor = Input( shape=(19, 86) )
 
 x = Dense(3000, activation='relu')(input_tensor)
 x = Dropout(0.3)(x)
