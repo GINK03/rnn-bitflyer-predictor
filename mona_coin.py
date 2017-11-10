@@ -44,12 +44,23 @@ def sampling(args):
 z = Lambda(sampling, output_shape=(1,))([m, h])
 
 model = Model(inputs=input_tensor, outputs=z)
-model.compile(loss='mae', optimizer='adam')
+model.compile(loss='mae', optimizer='sgd')
 
-ys, Xs = pickle.loads( gzip.decompress( open('tmp/data.pkl', 'rb').read() ) )
-max_ = ys.max()
-#ys = ys / max_
-print(Xs.shape)
-print(ys.shape)
-print(ys)
-model.fit(Xs, ys, batch_size=32, epochs=1000)
+if '--train' in sys.argv:
+  ys, Xs = pickle.loads( gzip.decompress( open('tmp/data.pkl', 'rb').read() ) )
+  max_ = ys.max()
+  #ys = ys / max_
+  print(Xs.shape)
+  print(ys.shape)
+  print(ys)
+  model.fit(Xs, ys, batch_size=32, epochs=1000)
+  model.save_weights('model.h5')
+
+if '--predict' in sys.argv:
+  ys, Xs = pickle.loads( gzip.decompress( open('tmp/data.pkl', 'rb').read() ) )
+  model.load_weights('model.h5')
+
+  yp = model.predict(Xs)
+  for p,y in zip(ys.tolist(), yp.tolist()):
+    print('yp', p, y)
+
