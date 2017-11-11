@@ -44,7 +44,12 @@ if '--scrape' in sys.argv:
     ...
 
   while True:
-    r = requests.get("http://mona-coin.com/charts_m5_jpy.html")
+    try:
+      r = requests.get("http://mona-coin.com/charts_m5_jpy.html")
+    except Exception as e:
+      print('Error', e)
+      Time.sleep(10)
+      continue
     html = r.text
     for line in html.split('\n'):
       #print(line)
