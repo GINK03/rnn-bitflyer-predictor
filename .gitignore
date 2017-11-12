@@ -4,4 +4,7 @@ fork/time_price.json
 tmp/data.pkl
 tmp/key_index.json
 tmp/make_pair.pkl
+mona_coin_scraping/mona_coin.db
+mona_coin_scraping/mona_coin.gdbm
+mona_coin_scraping/mona_coin.leveldb/
 models
