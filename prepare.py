@@ -77,9 +77,11 @@ if '--key_vec_sql' in sys.argv:
   open('tmp/key_index.json', 'w').write( json.dumps([key_index, size], indent=2, ensure_ascii=False) )
 
 if '--to_vec' in sys.argv:
+  import copy
   key_index, size = json.loads( open('tmp/key_index.json').read() )
 
   ys_, Xs = pickle.loads( gzip.decompress( open('tmp/make_pair.pkl', 'rb').read() ) )
+  origXs = copy.copy(Xs)
   
   Xs_ = []
   for indexX, X in enumerate(Xs):
@@ -100,4 +102,4 @@ if '--to_vec' in sys.argv:
   ys_ = np.array(ys_)
   print('ys s shape', ys_.shape)
   print('Xs s shape', Xs_.shape)
-  open('tmp/data.pkl', 'wb').write( gzip.compress( pickle.dumps( (ys_, Xs_) ) ) )
+  open('tmp/data.pkl', 'wb').write( gzip.compress( pickle.dumps( (ys_, Xs_, origXs) ) ) )
