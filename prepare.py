@@ -82,13 +82,20 @@ if '--to_vec' in sys.argv:
   ys_, Xs = pickle.loads( gzip.decompress( open('tmp/make_pair.pkl', 'rb').read() ) )
   
   Xs_ = []
-  for X in Xs:
-    base = [ [0.0]*len(key_index) for i in range(size) ]
+  for indexX, X in enumerate(Xs):
+    # 最後に時系列情報を入れる
+    base = [ [0.0]*len(key_index) for i in range(size+1) ]
     for index, ch in enumerate(list(X)):
       key = '%s-%s'%(index, ch)
       cursol = key_index[key]
       base[index][cursol] = 1.0
+    
     Xs_.append( base )
+    for indexY, cur in enumerate(range(indexX-15, indexX-1)):
+      print(cur)
+      print(indexY, ys_[cur])
+      base[-1][indexY] =  ys_[cur]
+      ...
   Xs_ = np.array(Xs_)
   ys_ = np.array(ys_)
   print('ys s shape', ys_.shape)

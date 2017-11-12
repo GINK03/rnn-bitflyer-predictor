@@ -23,27 +23,27 @@ def CBRD(inputs, filters=64, kernel_size=3, droprate=0.5):
   return x
 
 
-def DBRD(inputs, units=4096, droprate=0.5):
+def DBRD(inputs, units=4096, droprate=0.35):
   x = Dense(units)(inputs)
   x = BatchNormalization()(x)
   x = Activation('relu')(x)
   x = Dropout(droprate)(x)
   return x
 
-input_tensor = Input( shape=(18, 40) )
+input_tensor = Input( shape=(19, 40) )
 
 x = Dense(3000, activation='relu')(input_tensor)
-x = CBRD(x, 64)
-x = CBRD(x, 64)
+x = CBRD(x, 4)
+x = CBRD(x, 4)
 x = MaxPool1D()(x)
 
-x = CBRD(x, 128)
-x = CBRD(x, 128)
+x = CBRD(x, 8)
+x = CBRD(x, 8)
 x = MaxPool1D()(x)
 
-x = CBRD(x, 256)
-x = CBRD(x, 256)
-x = CBRD(x, 256)
+x = CBRD(x, 16)
+x = CBRD(x, 16)
+x = CBRD(x, 16)
 x = MaxPool1D()(x)
 
 x = Flatten()(x)
