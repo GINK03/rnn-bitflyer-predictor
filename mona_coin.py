@@ -76,10 +76,24 @@ if '--train' in sys.argv:
     model.save_weights('models/model_{:09d}.h5'.format(i))
 
 if '--predict' in sys.argv:
+  import numpy as np
   ys, Xs = pickle.loads( gzip.decompress( open('tmp/data.pkl', 'rb').read() ) )
   model.load_weights('models/model_000000099.h5')
 
-  yp = model.predict(Xs)
-  for p,y in zip(ys.tolist(), yp.tolist()):
-    print('yp', p, y)
+  key_perf = {}
+ 
+  for i in range(100):
+    yp = model.predict(Xs)
+    for x, p,y in zip(Xs.tolist(), ys.tolist(), yp.tolist()):
+      key = ','.join( [str(xe) for xe in x] )
+      #print(key, 'yp', p, y)
+      if key_perf.get(key) is None:
+        key_perf[key] = [ 0.0, [] ]
+      key_perf[key][0] = y
+      key_perf[key][1].append( p )
+
+  for key, perf in key_perf.items():
+    y = perf[0]
+    ps = perf[1]
+    print(y, ps)
 
