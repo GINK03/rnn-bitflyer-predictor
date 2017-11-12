@@ -4,6 +4,7 @@ import gzip
 import os
 import sys
 import statistics
+import glob
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential, Model, load_model
 from keras.layers import Lambda, Input, Activation, Dropout, Flatten, Dense, Reshape, merge
@@ -62,7 +63,7 @@ def sampling(args):
 z = Lambda(sampling, output_shape=(1,))([m, h])
 
 model = Model(inputs=input_tensor, outputs=z)
-model.compile(loss='mae', optimizer='sgd')
+model.compile(loss='mae', optimizer='adam')
 
 if '--train' in sys.argv:
   ys, Xs, origXs = pickle.loads( gzip.decompress( open('tmp/data.pkl', 'rb').read() ) )
@@ -71,7 +72,11 @@ if '--train' in sys.argv:
   print(Xs.shape)
   print(ys.shape)
   print(ys)
-  for i in range(100):
+  try:
+    model.load_weights( sorted( glob.glob('models/model_*.h5') ).pop() )
+  except IndexError as e:
+    ...
+  for i in range(1):
     model.fit(Xs, ys, batch_size=128, epochs=100)
     model.save_weights('models/model_{:09d}.h5'.format(i))
 
@@ -82,7 +87,7 @@ if '--predict' in sys.argv:
 
   key_perf = {}
  
-  model.load_weights('models/model_000000099.h5')
+  model.load_weights(sorted(glob.glob('models/model_*.h5')).pop())
   for i in range(10):
     yp = model.predict(Xs)
     for x, p,y in zip(origXs, ys.tolist(), yp.tolist()):
@@ -124,4 +129,4 @@ if '--predict' in sys.argv:
     print(Xs_)
     Xs_ = np.array(Xs_)
     ps = model.predict(Xs_)
-    print( 'next key', predkey,'predict value', ps)
+    print( '[OUTPUT] next key/', predkey,'/predict value/', ps.tolist()[0][0] )

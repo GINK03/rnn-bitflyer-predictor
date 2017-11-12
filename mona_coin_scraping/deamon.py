@@ -71,7 +71,11 @@ if '--scrape' in sys.argv:
       dbm[key_str] = val_str
       
       cur.execute('insert into mona_coin (key, val) values (?, ?)', (key_str, val_str))
-      conn.commit()
+      try:
+        conn.commit()
+      except Exception as e:
+        print(e)
+        ...
 
     print("Now Sleeping to time")
     Time.sleep(10)

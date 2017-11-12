@@ -93,7 +93,7 @@ if '--to_vec' in sys.argv:
       base[index][cursol] = 1.0
     
     Xs_.append( base )
-    for indexY, cur in enumerate(range(indexX-15, indexX-1)):
+    for indexY, cur in enumerate(range(-15, 0)):
       print(cur)
       print(indexY, ys_[cur])
       base[-1][indexY] =  ys_[cur]
