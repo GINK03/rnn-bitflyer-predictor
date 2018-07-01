@@ -22,7 +22,7 @@
 
 ## RMSEを目的関数に先の40秒を予想する
 
-40ごとの定点観測の4点についてのASK, BIDの乖離量を計算すると、RMSEで、`174`程度の差になる
+40ごとの定点観測の4点についてのASK, BIDの乖離量を計算すると、7holdしたRMSEで、`174`程度の差になる
 
 ベンチマークとして平均との差を計算すると、`278`程度であり、多少は学習できていることがわかる。  
 
@@ -50,3 +50,7 @@ for i in range(len(Tds)):
   score += sqrt(mean_squared_error(Tds[i], zeros[i]))
 print(score/len(Tds))
 ```
+
+## Next Action
+ - BitFlyerでの実正試験
+ - どこでうってどこで買うかのルール策定
