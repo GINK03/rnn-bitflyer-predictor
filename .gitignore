@@ -1,4 +1,3 @@
-model.h5
 fork/btceUSD.csv.gz
 fork/time_price.json
 tmp/data.pkl
@@ -8,3 +7,8 @@ mona_coin_scraping/mona_coin.db
 mona_coin_scraping/mona_coin.gdbm
 mona_coin_scraping/mona_coin.leveldb/
 models
+
+flagments
+boards
+tickers
+series
