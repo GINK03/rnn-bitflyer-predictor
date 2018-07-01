@@ -14,3 +14,8 @@
 <div align="center">
   <img width="600px" src="https://d2mxuefqeaa7sj.cloudfront.net/s_3A7AF7713DCD72B55C56C67EC74231E0AA5475959E8D5F94A00EC0CFD8EAA0EE_1530431038030_image.png">
 </div>
+
+どうせ板情報が複雑過ぎて、上手く行かないので、板情報の次元を予め、FCを通して落としておく
+<div align="center">
+  <img width="450px" src="https://d2mxuefqeaa7sj.cloudfront.net/s_3A7AF7713DCD72B55C56C67EC74231E0AA5475959E8D5F94A00EC0CFD8EAA0EE_1530433750649_image.png">
+</div>
