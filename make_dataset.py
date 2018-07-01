@@ -29,9 +29,16 @@ for path in Path('flagments').glob('*'):
    
 
 tds = np.array(tds)
+tds = tds.reshape(len(tds), 1, 20)
+
 Tds = np.array(Tds)
+Tds = Tds.reshape(len(Tds), 4)
+
 tbs = np.array(tbs)
+tbs = tbs.reshape(len(tbs), 5, 20)
+
 tas = np.array(tas)
+tas = tas.reshape(len(tas), 5, 20)
 
 data = pickle.dumps( (tds, Tds, tbs, tas))
 open('ds_tuple.pkl', 'wb').write( data )
