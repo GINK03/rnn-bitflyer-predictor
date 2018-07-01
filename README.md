@@ -52,5 +52,5 @@ print(score/len(Tds))
 ```
 
 ## Next Action
+ - どこで売って、どこで買うかのルール策定
  - BitFlyerでの実正試験
- - どこでうってどこで買うかのルール策定
