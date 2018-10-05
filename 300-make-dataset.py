@@ -8,7 +8,7 @@ Tds = []
 tbs = []
 tas = []
 
-for path in Path('flagments').glob('*'):
+for path in Path('tmp/flagments').glob('*'):
   obj = json.load( path.open() )
   print(path)
   objs = [obj[key] for key in sorted(obj.keys(), key=lambda x:int(x))]
@@ -19,8 +19,9 @@ for path in Path('flagments').glob('*'):
   td, Td = td[:20], td[20:]
   tb, Tb = tb[:20], tb[20:]
   ta, Ta = ta[:20], ta[20:]
-  
+  #print(tb) 
   tds.append( td )
+  print(len(Td))
   Tds.append( Td )
 
   tbs.append( tb )
@@ -32,14 +33,15 @@ tds = np.array(tds)
 tds = tds.reshape(len(tds), 1, 20)
 
 Tds = np.array(Tds)
-Tds = Tds.reshape(len(Tds), 4)
+Tds = Tds.reshape(len(Tds), 14, 1)
 
 tbs = np.array(tbs)
+print(tbs.shape)
 tbs = tbs.reshape(len(tbs), 5, 20)
 
 tas = np.array(tas)
 tas = tas.reshape(len(tas), 5, 20)
 
 data = pickle.dumps( (tds, Tds, tbs, tas))
-open('ds_tuple.pkl', 'wb').write( data )
+open('tmp/ds_tuple.pkl', 'wb').write( data )
     
