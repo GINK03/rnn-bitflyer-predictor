@@ -32,13 +32,14 @@ for path in list(Path('tmp/flagments').glob('*'))[:1024*10]:
   tas.append( ta )
    
 
-tds = np.array(tds)
-Tds = np.array(Tds)
+tds = np.array(tds) / 100.0
+Tds = np.array(Tds) / 100.0
 tbs = np.array(tbs)
-print(tbs.shape)
-tbs = tbs.reshape(len(tbs), 5, 20)
+#print(tbs.shape)
+tbs = tbs.reshape(len(tbs), 5, 20) / 100.0
 tas = np.array(tas)
-tas = tas.reshape(len(tas), 5, 20)
+tas = tas.reshape(len(tas), 5, 20) / 100.0
+
 data = pickle.dumps( (tds, Tds, tbs, tas))
 open('tmp/ds_tuple.pkl', 'wb').write( data )
     

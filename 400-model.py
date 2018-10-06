@@ -89,7 +89,7 @@ if '--predict' in sys.argv:
   tds, Tds, tbs, tas = pickle.load(open('tmp/ds_tuple.pkl', 'rb'))
   model = getModel()
 
-  model.load_weights('tmp/weights/epoch_056_val_loss_284.182861_loss_180.860878_lr_0.000057.h5')
+  model.load_weights('tmp/weights/epoch_099_val_loss_1.559443_loss_1.284683_lr_0.000006.h5')
   yps = model.predict([tds, tbs, tas])
   for yp in yps:
     print(yp)
