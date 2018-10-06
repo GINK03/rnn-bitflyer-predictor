@@ -15,8 +15,6 @@ from keras.layers.merge         import Concatenate as Concat
 from keras.layers.noise         import GaussianNoise as GN
 from keras.layers.merge         import Dot,Multiply
 from keras import backend as K
-
-
 import numpy as np
 import random
 import sys
@@ -30,6 +28,7 @@ import json
 import gzip
 from sklearn.cross_validation import KFold
 from keras.layers import Concatenate
+from keras.layers import Reshape
 buff = None
 def callbacks(epoch, logs):
   global buff
@@ -45,19 +44,24 @@ def getModel():
   TIME_SIZE     = 20
   PERD_SIZE     = 14
   input_tensor1 = Input(shape=(1, 20))
-  x1             = Bi(GRU(300, dropout=0.0, recurrent_dropout=0.2, activation='relu', recurrent_activation='tanh', return_sequences=False))(input_tensor1)
+  x1             = Bi(LSTM(256, dropout=0.0, recurrent_dropout=0.1, activation='relu', recurrent_activation='tanh', return_sequences=False))(input_tensor1)
 
   input_tensor2 = Input(shape=(5, 20))
-  x2             = Bi(GRU(300, dropout=0.0, recurrent_dropout=0.2, activation='relu', recurrent_activation='tanh', return_sequences=False))(input_tensor2)
+  x2             = Bi(LSTM(256, dropout=0.0, recurrent_dropout=0.2, activation='relu', recurrent_activation='tanh', return_sequences=False))(input_tensor2)
   
   input_tensor3 = Input(shape=(5, 20))
-  x3             = Bi(GRU(300, dropout=0.0, recurrent_dropout=0.2, activation='relu', recurrent_activation='tanh', return_sequences=False))(input_tensor3)
+  x3             = Bi(LSTM(256, dropout=0.0, recurrent_dropout=0.2, activation='relu', recurrent_activation='tanh', return_sequences=False))(input_tensor3)
   
   x             = Concatenate(axis=1)([x1, x2, x3])
+  x             = Dense(1024, activation='relu')(x)
+  #x             = x1
+  print(x.shape)
   x             = RepeatVector(14)(x)
-  x             = Bi(LSTM(128, return_sequences=True))(x)
-  x             = Dense(1000, activation='relu')(x)
-  prediction    = Dense(1, activation='linear')(x)
+  x             = Bi(LSTM(256, return_sequences=True))(x)
+  x             = Dense(256, activation='relu')(x)
+  x             = Dense(1, activation='linear')(x)
+  prediction    = Reshape( (1, 14) )(x)
+
   print(prediction.shape)
   model         = Model([input_tensor1, input_tensor2, input_tensor3], prediction)
   #model.compile(Adam(), loss=root_mean_squared_error)
@@ -73,7 +77,7 @@ if '--train' in sys.argv:
     model = getModel()
     for epoch in range(100):
       model.fit([tds[tindex], tbs[tindex], tas[tindex]], Tds[tindex], validation_data=([tds[vindex], tbs[vindex], tas[vindex]], Tds[vindex]), \
-                  epochs=1, shuffle=True, batch_size=300, callbacks=[callback])
+                  epochs=1, shuffle=True, batch_size=4, callbacks=[callback])
       lr = K.get_value(model.optimizer.lr)
       K.set_value(model.optimizer.lr, 0.950 * K.get_value(model.optimizer.lr))
       log = f'epoch_{epoch:03d}_val_loss_{buff["val_loss"]:03.6f}_loss_{buff["loss"]:03.6f}_lr_{lr:0.06f}'
@@ -85,7 +89,7 @@ if '--predict' in sys.argv:
   tds, Tds, tbs, tas = pickle.load(open('tmp/ds_tuple.pkl', 'rb'))
   model = getModel()
 
-  model.load_weights('tmp/weights/epoch_099_val_loss_232.836230_loss_234.534730_lr_0.000006.h5')
+  model.load_weights('tmp/weights/epoch_056_val_loss_284.182861_loss_180.860878_lr_0.000057.h5')
   yps = model.predict([tds, tbs, tas])
   for yp in yps:
     print(yp)
