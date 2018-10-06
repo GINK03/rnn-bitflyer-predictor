@@ -20,35 +20,38 @@
   <img width="450px" src="https://d2mxuefqeaa7sj.cloudfront.net/s_3A7AF7713DCD72B55C56C67EC74231E0AA5475959E8D5F94A00EC0CFD8EAA0EE_1530433750649_image.png">
 </div>
 
-## RMSEを目的関数に先の40秒を予想する
+## RMSEを目的関数に先の150秒を予想する
 
-40ごとの定点観測の4点についてのASK, BIDの乖離量を計算すると、7holdしたRMSEで、`174`程度の差になる
+40ごとの定点観測の4点についてのASK, BIDの乖離量を計算すると、7holdしたMAEで、`1.559`程度の差になる
 
-ベンチマークとして平均との差を計算すると、`278`程度であり、多少は学習できていることがわかる。  
+ベンチマークとして平均との差を計算すると、`1.896`程度であり、学習できていることがわかる。  
 
-この時の、平均値からの差を答えとした場合のRMSEの計算はとなります。  
+この時の、平均値からの差を答えとした場合のMAEの計算はとなります。  
 
 ```python
 import pickle
 from math import sqrt
+
+tds, Tds, tbs, tas = pickle.load(open('tmp/ds_tuple.pkl', 'rb'))
+
+a1 = Tds[:, 0, 0].mean()
+SIZE = len(Tds[:, 0, 0])
+
+print(a1)
+print(SIZE)
+
 import numpy as np
-
-tds, Tds, tbs, tas = pickle.load(open('ds_tuple.pkl', 'rb')) 
-
-a1 = Tds[:, 0].mean()
-a2 = Tds[:, 1].mean()
-a3 = Tds[:, 2].mean()
-a4 = Tds[:, 3].mean()
-
-zeros = np.zeros((len(Tds), 4))
-for i, a in enumerate([a1, a2, a3, a4]):
-  zeros[:,i] = a
-
 from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error
+
 score = 0
-for i in range(len(Tds)):
-  score += sqrt(mean_squared_error(Tds[i], zeros[i]))
-print(score/len(Tds))
+for i in range(1):
+  #score += sqrt(mean_squared_error(Tds[:, i], zeros[i]))
+  score += mean_absolute_error(Tds[:, 0, 0], [ a1 for x in range(SIZE) ] )
+  #print( Tds[:, i][:,0] )
+  #print( zeros[i].shape )
+print( score  )
+
 ```
 
 ## Next Action
