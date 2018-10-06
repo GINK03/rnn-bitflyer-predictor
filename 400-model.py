@@ -81,4 +81,11 @@ if '--train' in sys.argv:
       print(log) 
     exit()
 
+if '--predict' in sys.argv:
+  tds, Tds, tbs, tas = pickle.load(open('tmp/ds_tuple.pkl', 'rb'))
+  model = getModel()
 
+  model.load_weights('tmp/weights/epoch_099_val_loss_232.836230_loss_234.534730_lr_0.000006.h5')
+  yps = model.predict([tds, tbs, tas])
+  for yp in yps:
+    print(yp)
