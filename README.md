@@ -20,7 +20,7 @@
   <img width="450px" src="https://d2mxuefqeaa7sj.cloudfront.net/s_3A7AF7713DCD72B55C56C67EC74231E0AA5475959E8D5F94A00EC0CFD8EAA0EE_1530433750649_image.png">
 </div>
 
-## RMSEを目的関数に先の150秒を予想する
+## MAEの最小化を目的関数に先の150秒を予想する
 
 40ごとの定点観測の4点についてのASK, BIDの乖離量を計算すると、7holdしたMAEで、`1.559`程度の差になる
 
